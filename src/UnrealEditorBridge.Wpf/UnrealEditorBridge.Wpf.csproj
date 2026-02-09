@@ -1,0 +1,23 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net8.0-windows</TargetFramework>
+    <UseWPF>true</UseWPF>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <RootNamespace>UnrealEditorBridge.Wpf</RootNamespace>
+    <AssemblyName>UnrealEditorBridge.Wpf</AssemblyName>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+  </PropertyGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\UnrealEditorBridge.Adapter\UnrealEditorBridge.Adapter.csproj" />
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="Unity.Container" Version="5.11.11" />
+    <PackageReference Include="Prism.Core" Version="9.0.537" />
+    <PackageReference Include="ReactiveUI" Version="20.1.1" />
+    <PackageReference Include="ReactiveUI.WPF" Version="20.1.1">
+      <NoWarn>NU1701</NoWarn>
+    </PackageReference>
+  </ItemGroup>
+</Project>

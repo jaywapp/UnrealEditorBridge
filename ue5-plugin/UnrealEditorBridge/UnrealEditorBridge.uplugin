@@ -1,0 +1,20 @@
+{
+    "FileVersion": 3,
+    "Version": 1,
+    "VersionName": "1.0",
+    "FriendlyName": "Unreal Editor Bridge",
+    "Description": "UE5 Editor와 외부 .NET 툴 간 IPC 브릿지",
+    "Category": "Editor",
+    "CreatedBy": "UnrealEditorBridge",
+    "EnabledByDefault": true,
+    "CanContainContent": false,
+    "IsBetaVersion": false,
+    "Modules": [
+        {
+            "Name": "UnrealEditorBridge",
+            "Type": "Editor",
+            "LoadingPhase": "PostEngineInit",
+            "PlatformAllowList": ["Win64"]
+        }
+    ]
+}

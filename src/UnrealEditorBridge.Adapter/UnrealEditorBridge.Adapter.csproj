@@ -1,0 +1,13 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>net8.0-windows</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <RootNamespace>UnrealEditorBridge.Adapter</RootNamespace>
+    <AssemblyName>UnrealEditorBridge.Adapter</AssemblyName>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+  </PropertyGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\UnrealEditorBridge.Protocol\UnrealEditorBridge.Protocol.csproj" />
+  </ItemGroup>
+</Project>

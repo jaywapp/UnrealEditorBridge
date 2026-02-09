@@ -1,0 +1,47 @@
+# .NET
+bin/
+obj/
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+.vs/
+*.nupkg
+*.snupkg
+
+# NuGet
+packages/
+*.nuget.props
+*.nuget.targets
+
+# Build results
+[Dd]ebug/
+[Rr]elease/
+x64/
+x86/
+[Bb]uild/
+bld/
+
+# IDE
+.idea/
+*.resharper
+_ReSharper*/
+
+# UE5
+ue5-plugin/*/Binaries/
+ue5-plugin/*/Intermediate/
+ue5-plugin/*/DerivedDataCache/
+ue5-plugin/*/Saved/
+
+# OS
+Thumbs.db
+.DS_Store
+desktop.ini
+
+# Claude Code
+.claude/
+
+# Temp / prompts
+nul
+prompt.md
+prompt2.md
