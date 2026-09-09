@@ -18,4 +18,15 @@ Check.That(EventRecordParser.ReadPayloadJson(slot) == Encoding.UTF8.GetString(pa
 BinaryPrimitives.WriteUInt32LittleEndian(slot.AsSpan(12), 0);
 Check.That(EventRecordParser.ReadPayloadJson(slot) == "", "Empty payload");
 await Check.ThrowsAsync<ArgumentException>(() => Task.Run(() => HeaderParser.Parse(Array.Empty<byte>())), "Invalid header");
+BinaryPrimitives.WriteUInt64LittleEndian(slot, 0);
+Check.That(!EventRecordParser.IsValidSlot(slot), "Zero sequence is invalid");
+BinaryPrimitives.WriteUInt64LittleEndian(slot, 7);
+BinaryPrimitives.WriteUInt32LittleEndian(slot.AsSpan(8), 0);
+Check.That(!EventRecordParser.IsValidSlot(slot), "None event is invalid");
+var header = new byte[ProtocolConstants.HeaderSize];
+BinaryPrimitives.WriteInt64LittleEndian(header.AsSpan(HeaderLayout.HeartbeatOffset), 123456789);
+BinaryPrimitives.WriteUInt64LittleEndian(header.AsSpan(HeaderLayout.EventSequenceNumberOffset), ulong.MaxValue);
+Check.That(HeaderParser.Parse(header).Heartbeat == 123456789 && HeaderParser.ReadHeartbeat(header) == 123456789, "Header heartbeat round trip");
+Check.That(HeaderParser.Parse(header).EventSequenceNumber == ulong.MaxValue, "Maximum sequence is preserved");
+await Check.ThrowsAsync<ArgumentException>(() => Task.Run(() => HeaderParser.Parse(header.AsSpan(0, header.Length - 1))), "One-byte-short header is rejected");
 Console.WriteLine($"PASS {Check.Count} protocol regression checks");

@@ -16,3 +16,4 @@
 이 저장소의 기존 문서 인덱스와 생성 규칙이 있으면 그 규칙을 우선하며, 기존 파일을 덮어쓰지 않습니다.
 
 - 성능·안정성 작업: [분석](performance-resilience-analysis.md), [설계](performance-resilience-design.md), [작업](performance-resilience-tasks.md)
+- 전체 빌드·로컬 검증: [분석](build-verification-analysis.md), [설계](build-verification-design.md), [작업 및 결과](build-verification-tasks.md)
