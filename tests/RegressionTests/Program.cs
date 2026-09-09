@@ -1,0 +1,32 @@
+using System.Buffers.Binary;
+using System.Text;
+using UnrealEditorBridge.Protocol;
+for (var length = 0; length < EventSlotLayout.RecordHeaderSize; length++) {
+    Check.That(!EventRecordParser.IsValidSlot(new byte[length]), "Truncated slot is invalid");
+    Check.That(EventRecordParser.ReadPayloadJson(new byte[length]) == "", "Truncated payload is empty");
+}
+var payload = Encoding.UTF8.GetBytes("{\"name\":\"에셋\"}");
+var slot = new byte[EventSlotLayout.PayloadOffset + payload.Length];
+BinaryPrimitives.WriteUInt64LittleEndian(slot, 7);
+BinaryPrimitives.WriteUInt32LittleEndian(slot.AsSpan(8), 1);
+BinaryPrimitives.WriteUInt32LittleEndian(slot.AsSpan(12), (uint)payload.Length);
+payload.CopyTo(slot, EventSlotLayout.PayloadOffset);
+Check.That(EventRecordParser.IsValidSlot(slot), "Valid slot");
+Check.That(EventRecordParser.ReadPayloadJson(slot) == Encoding.UTF8.GetString(payload), "UTF8 payload");
+BinaryPrimitives.WriteUInt32LittleEndian(slot.AsSpan(12), (uint)payload.Length + 10);
+Check.That(EventRecordParser.ReadPayloadJson(slot) == Encoding.UTF8.GetString(payload), "Existing truncation contract");
+BinaryPrimitives.WriteUInt32LittleEndian(slot.AsSpan(12), 0);
+Check.That(EventRecordParser.ReadPayloadJson(slot) == "", "Empty payload");
+await Check.ThrowsAsync<ArgumentException>(() => Task.Run(() => HeaderParser.Parse(Array.Empty<byte>())), "Invalid header");
+BinaryPrimitives.WriteUInt64LittleEndian(slot, 0);
+Check.That(!EventRecordParser.IsValidSlot(slot), "Zero sequence is invalid");
+BinaryPrimitives.WriteUInt64LittleEndian(slot, 7);
+BinaryPrimitives.WriteUInt32LittleEndian(slot.AsSpan(8), 0);
+Check.That(!EventRecordParser.IsValidSlot(slot), "None event is invalid");
+var header = new byte[ProtocolConstants.HeaderSize];
+BinaryPrimitives.WriteInt64LittleEndian(header.AsSpan(HeaderLayout.HeartbeatOffset), 123456789);
+BinaryPrimitives.WriteUInt64LittleEndian(header.AsSpan(HeaderLayout.EventSequenceNumberOffset), ulong.MaxValue);
+Check.That(HeaderParser.Parse(header).Heartbeat == 123456789 && HeaderParser.ReadHeartbeat(header) == 123456789, "Header heartbeat round trip");
+Check.That(HeaderParser.Parse(header).EventSequenceNumber == ulong.MaxValue, "Maximum sequence is preserved");
+await Check.ThrowsAsync<ArgumentException>(() => Task.Run(() => HeaderParser.Parse(header.AsSpan(0, header.Length - 1))), "One-byte-short header is rejected");
+Console.WriteLine($"PASS {Check.Count} protocol regression checks");
