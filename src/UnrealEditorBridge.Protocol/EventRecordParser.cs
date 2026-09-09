@@ -43,6 +43,9 @@ namespace UnrealEditorBridge.Protocol
         /// <returns>JSON 페이로드 문자열. 페이로드 크기가 0이면 빈 문자열.</returns>
         public static string ReadPayloadJson(ReadOnlySpan<byte> slotData)
         {
+            if (slotData.Length < EventSlotLayout.RecordHeaderSize)
+                return string.Empty;
+
             var payloadSize = (int)ReadPayloadSize(slotData);
             if (payloadSize <= 0)
                 return string.Empty;
@@ -60,6 +63,9 @@ namespace UnrealEditorBridge.Protocol
         /// </summary>
         public static bool IsValidSlot(ReadOnlySpan<byte> slotData)
         {
+            if (slotData.Length < EventSlotLayout.RecordHeaderSize)
+                return false;
+
             var seq = ReadSequenceNumber(slotData);
             var eventType = ReadEventType(slotData);
             return seq > 0 && eventType != AssetEventType.None;
